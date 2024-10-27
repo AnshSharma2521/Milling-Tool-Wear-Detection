@@ -72,6 +72,8 @@ The **NJUST-CCTD** dataset is from the Nanjing University of Science and Technol
 
 This dataset is critical for training models to recognize different wear levels, as it provides labeled images with clear distinctions in wear conditions. It captures images under multiple settings, making it suitable for real-world applications where lighting and tool positioning may vary.
 
+![Image_example](Examples/data_example.png)
+
 ## Dataset
 
 The dataset used in this project consists of high-resolution images from the NJUST-CCTD, annotated according to wear levels:
@@ -92,34 +94,149 @@ The dataset used in this project consists of high-resolution images from the NJU
    - **Noise Reduction**: Apply noise reduction filters to improve image clarity.
    - **Contrast Adjustment**: Adjust image contrast for better feature visibility.
    - **Data Augmentation**: Generate additional images by rotating, flipping, and zooming.
+ ![Image_example](Examples/methodoloy.png)
 
 3. **Dataset Splitting**  
    - Split dataset into training, validation, and test sets.
    - Ensure class balance across each subset.
 
-4. **Model Architecture Design**  
-   - **Convolutional Layers**: Add layers with ReLU activation to extract features.
-   - **Max-Pooling Layers**: Apply pooling to reduce data dimensions.
-   - **Fully Connected Layers**: Integrate features for classification.
-   - **Output Layer**: Use softmax activation for two-class probability output.
+4. **Model Architecture Design**
 
-5. **Model Compilation**  
+# 1. **CNN Architecture for Binary Classification**
+
+
+This Convolutional Neural Network (CNN) model is designed for a two-class classification task, using a series of convolutional, max-pooling, and fully-connected layers with ReLU and sigmoid activations.
+
+## Layer-by-Layer Architecture
+
+1. **Input Layer**
+   - Input shape: 150x150x3 (RGB image)
+
+2. **Convolutional and Max-Pooling Layers**
+   - Conv Layer 1: 32 filters, 3x3 kernel, ReLU activation
+   - Max Pooling: 2x2 pool size
+
+   - Conv Layer 2: 64 filters, 3x3 kernel, ReLU activation
+   - Max Pooling: 2x2 pool size
+
+   - Conv Layer 3: 32 filters, 3x3 kernel, ReLU activation
+   - Max Pooling: 2x2 pool size
+
+3. **Fully Connected Layers**
+   - Dense Layer 1: 128 units, ReLU activation
+   - Dense Layer 2 (Output): 1 unit, sigmoid activation
+
+## Summary of Layers
+
+| Layer Type       | Filters/Units | Kernel Size | Activation | Output Shape          |
+|------------------|---------------|-------------|------------|-----------------------|
+| Input            | -             | -           | -          | 150x150x3             |
+| Conv 1           | 32            | 3x3         | ReLU       | 150x150x32            |
+| Max Pooling      | -             | 2x2         | -          | 75x75x32              |
+| Conv 2           | 64            | 3x3         | ReLU       | 75x75x64              |
+| Max Pooling      | -             | 2x2         | -          | 37x37x64              |
+| Conv 3           | 32            | 3x3         | ReLU       | 37x37x32              |
+| Max Pooling      | -             | 2x2         | -          | 18x18x32              |
+| Dense Layer 1    | 128           | -           | ReLU       | 128                   |
+| Dense Layer 2    | 1             | -           | Sigmoid    | 1                     |
+
+---
+
+This architecture is well-suited for binary classification tasks. It uses three convolutional layers to capture spatial features from input images, followed by dense layers to perform the final classification.
+ # 2. **VGG16 Architecture Layers**
+
+ 
+The VGG16 model is a Convolutional Neural Network (CNN) with 16 layers that have weights, designed by the Visual Geometry Group (VGG) at the University of Oxford. It consists of 13 convolutional layers, 5 max-pooling layers, and 3 fully-connected layers, primarily using 3x3 convolution filters and ReLU activations.
+
+## Layer-by-Layer Architecture
+
+1. **Input Layer**
+   - Input shape: 224x224x3 (RGB image)
+
+2. **Convolutional Layers**
+   - Block 1:
+     - Conv Layer 1: 64 filters, 3x3 kernel, stride 1, padding "same"
+     - Conv Layer 2: 64 filters, 3x3 kernel, stride 1, padding "same"
+     - Max Pooling: 2x2 pool size, stride 2
+
+   - Block 2:
+     - Conv Layer 3: 128 filters, 3x3 kernel, stride 1, padding "same"
+     - Conv Layer 4: 128 filters, 3x3 kernel, stride 1, padding "same"
+     - Max Pooling: 2x2 pool size, stride 2
+
+   - Block 3:
+     - Conv Layer 5: 256 filters, 3x3 kernel, stride 1, padding "same"
+     - Conv Layer 6: 256 filters, 3x3 kernel, stride 1, padding "same"
+     - Conv Layer 7: 256 filters, 3x3 kernel, stride 1, padding "same"
+     - Max Pooling: 2x2 pool size, stride 2
+
+   - Block 4:
+     - Conv Layer 8: 512 filters, 3x3 kernel, stride 1, padding "same"
+     - Conv Layer 9: 512 filters, 3x3 kernel, stride 1, padding "same"
+     - Conv Layer 10: 512 filters, 3x3 kernel, stride 1, padding "same"
+     - Max Pooling: 2x2 pool size, stride 2
+
+   - Block 5:
+     - Conv Layer 11: 512 filters, 3x3 kernel, stride 1, padding "same"
+     - Conv Layer 12: 512 filters, 3x3 kernel, stride 1, padding "same"
+     - Conv Layer 13: 512 filters, 3x3 kernel, stride 1, padding "same"
+     - Max Pooling: 2x2 pool size, stride 2
+
+3. **Fully Connected Layers**
+   - Fully Connected Layer 1: 4096 units, ReLU activation
+   - Fully Connected Layer 2: 4096 units, ReLU activation
+   - Fully Connected Layer 3 (Output): Number of classes (e.g., 1000 for ImageNet), softmax activation
+
+  # **Summary of Layers**
+
+| Layer Type       | Filters/Units | Kernel Size | Activation | Output Shape           |
+|------------------|---------------|-------------|------------|------------------------|
+| Input            | -             | -           | -          | 224x224x3              |
+| Conv 1           | 64            | 3x3         | ReLU       | 224x224x64             |
+| Conv 2           | 64            | 3x3         | ReLU       | 224x224x64             |
+| Max Pooling      | -             | 2x2         | -          | 112x112x64             |
+| Conv 3           | 128           | 3x3         | ReLU       | 112x112x128            |
+| Conv 4           | 128           | 3x3         | ReLU       | 112x112x128            |
+| Max Pooling      | -             | 2x2         | -          | 56x56x128              |
+| Conv 5           | 256           | 3x3         | ReLU       | 56x56x256              |
+| Conv 6           | 256           | 3x3         | ReLU       | 56x56x256              |
+| Conv 7           | 256           | 3x3         | ReLU       | 56x56x256              |
+| Max Pooling      | -             | 2x2         | -          | 28x28x256              |
+| Conv 8           | 512           | 3x3         | ReLU       | 28x28x512              |
+| Conv 9           | 512           | 3x3         | ReLU       | 28x28x512              |
+| Conv 10          | 512           | 3x3         | ReLU       | 28x28x512              |
+| Max Pooling      | -             | 2x2         | -          | 14x14x512              |
+| Conv 11          | 512           | 3x3         | ReLU       | 14x14x512              |
+| Conv 12          | 512           | 3x3         | ReLU       | 14x14x512              |
+| Conv 13          | 512           | 3x3         | ReLU       | 14x14x512              |
+| Max Pooling      | -             | 2x2         | -          | 7x7x512                |
+| Fully Connected 1| 4096          | -           | ReLU       | 1x1x4096               |
+| Fully Connected 2| 4096          | -           | ReLU       | 1x1x4096               |
+| Fully Connected 3| Number of Classes| -        | Softmax    | 1x1xNumber of Classes  |
+
+---
+
+The VGG16 architecture is well-suited for image classification tasks and serves as a foundational model for transfer learning applications.
+
+       
+
+6. **Model Compilation**  
    - Choose optimizer (e.g., Adam) and loss function (categorical cross-entropy).
    - Set evaluation metric to accuracy.
 
-6. **Model Training**  
+7. **Model Training**  
    - Train model on training data, monitor validation performance.
    - Use early stopping and checkpointing to save the best model.
 
-7. **Model Evaluation**  
+8. **Model Evaluation**  
    - Evaluate model on test set.
    - Generate accuracy, precision, recall, F1-score.
    - Visualize performance with confusion matrix and ROC curve.
 
-8. **Model Fine-tuning**  
+9. **Model Fine-tuning**  
    - Adjust hyperparameters, retrain, and re-evaluate for improvement.
 
-9. **Results Analysis**  
+10. **Results Analysis**  
    - Analyze misclassifications to identify improvement areas.
    - Summarize final performance metrics and visualize key results.
 
